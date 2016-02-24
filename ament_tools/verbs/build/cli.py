@@ -114,6 +114,12 @@ def prepare_arguments(parser, args):
         nargs='*',
         help='List of packages to skip'
     )
+    parser.add_argument(
+        '--exclude',
+        nargs='*',
+        help='List of paths/regular expressions for paths to exclude '
+        'when searching for packages'
+    )
 
     # Allow all available build_type's to provide additional arguments
     for build_type in yield_supported_build_types():
@@ -139,7 +145,7 @@ def main(opts, per_package_main=build_pkg_main):
         cwd, opts.directory, opts.install_space,
         'install' if not opts.isolated else 'install_isolated')
 
-    packages = topological_order(opts.basepath)
+    packages = topological_order(opts.basepath, exclude_patterns=opts.exclude)
 
     circular_dependencies = [
         package_names for path, package_names, _ in packages if path is None]

@@ -86,7 +86,8 @@ def topological_order(
     root_dir,
     whitelisted=None,
     blacklisted=None,
-    underlay_workspaces=None
+    underlay_workspaces=None,
+    exclude_patterns=None
 ):
     """
     Crawl the filesystem and order the found packages topologically.
@@ -97,10 +98,13 @@ def topological_order(
     :param underlay_workspaces: A list of underlay workspaces of packages
         which might provide dependencies in case of partial workspaces,
         ``list``
+    :param list exclude_patterns: A list of paths/regular expressions for paths
+        which should not be searched
     :returns: A list of tuples containing the relative path and a
         ``Package`` object, ``list``
     """
-    packages = _find_unique_packages(root_dir)
+    packages = _find_unique_packages(
+        root_dir, exclude_patterns=exclude_patterns)
 
     # find packages in underlayed workspaces
     underlay_packages = {}
