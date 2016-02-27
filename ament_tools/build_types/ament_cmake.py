@@ -34,6 +34,7 @@ class AmentCmakeBuildType(CmakeBuildType):
     description = "ament package built with cmake"
 
     def prepare_arguments(self, parser):
+        super(AmentCmakeBuildType, self).prepare_arguments(parser)
         parser.add_argument(
             '--force-ament-cmake-configure',
             action='store_true',
@@ -49,10 +50,13 @@ class AmentCmakeBuildType(CmakeBuildType):
         # The ament CMake pass-through flag collects dashed options.
         # This requires special handling or argparse will complain about
         # unrecognized options.
-        args, cmake_args = extract_argument_group(args, '--ament-cmake-args')
-        extras = {
-            'ament_cmake_args': cmake_args,
-        }
+        args, extras = super(AmentCmakeBuildType, self).argument_preprocessor(args)
+        args, ament_cmake_args = extract_argument_group(args, '--ament-cmake-args')
+        extras.update(
+            {
+                'ament_cmake_args': ament_cmake_args,
+            }
+        )
         return args, extras
 
     def extend_context(self, options):

@@ -115,6 +115,9 @@ def prepare_arguments(parser, args):
         help='List of packages to skip'
     )
 
+    # If multiple arguments with same option string are added, only keep the most recently-added
+    parser.conflict_handler = 'resolve'
+
     # Allow all available build_type's to provide additional arguments
     for build_type in yield_supported_build_types():
         build_type_impl = build_type.load()()
